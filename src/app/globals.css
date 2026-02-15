@@ -1,26 +1,162 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Tahoma&display=swap');
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: #39ff14;
+  --color-primary-dark: #2bcc10;
+  --color-primary-glow: #39ff1466;
+  --color-accent: #00e5ff;
+  --color-success: #39ff14;
+  --color-danger: #ff3131;
+  --color-warning: #ffaa00;
+  --color-bg: #0a0a0f;
+  --color-bg-card: #1a1a2e;
+  --color-bg-surface: #12121c;
+  --color-bg-raised: #252540;
+  --color-text: #d0d0d0;
+  --color-text-secondary: #7a7a8e;
+  --color-text-bright: #e8e8f0;
+  --color-border: #2a2a45;
+  --color-border-light: #3a3a55;
+  --color-chrome-light: #4a4a65;
+  --color-chrome-dark: #0e0e18;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overscroll-behavior: none;
+  min-height: 100dvh;
+}
+
+/* Y2K beveled panels */
+.bevel {
+  border: 2px solid;
+  border-color: #3a3a55 #0e0e18 #0e0e18 #3a3a55;
+}
+
+.bevel-inset {
+  border: 2px solid;
+  border-color: #0e0e18 #3a3a55 #3a3a55 #0e0e18;
+}
+
+.bevel-btn {
+  border: 2px solid;
+  border-color: #5a5a75 #0e0e18 #0e0e18 #5a5a75;
+  background: linear-gradient(180deg, #2a2a45 0%, #1a1a2e 100%);
+}
+
+.bevel-btn:active {
+  border-color: #0e0e18 #5a5a75 #5a5a75 #0e0e18;
+  background: linear-gradient(180deg, #1a1a2e 0%, #2a2a45 100%);
+}
+
+/* LCD / LED display */
+.lcd {
+  background: #0a1a0a;
+  border: 2px solid;
+  border-color: #0e0e18 #3a3a55 #3a3a55 #0e0e18;
+  font-family: 'Share Tech Mono', monospace;
+  color: #39ff14;
+  text-shadow: 0 0 8px #39ff1488, 0 0 20px #39ff1433;
+}
+
+/* Neon glow effect */
+.glow-green {
+  text-shadow: 0 0 7px #39ff1488, 0 0 20px #39ff1444, 0 0 40px #39ff1422;
+}
+
+.glow-green-box {
+  box-shadow: 0 0 8px #39ff1444, 0 0 20px #39ff1422, inset 0 0 8px #39ff1411;
+}
+
+/* Chrome gradient toolbar */
+.chrome-bar {
+  background: linear-gradient(180deg, #3a3a55 0%, #252540 30%, #1e1e35 70%, #16162a 100%);
+  border-bottom: 1px solid #0e0e18;
+  border-top: 1px solid #4a4a65;
+}
+
+/* Winamp-style grooved separator */
+.groove {
+  height: 2px;
+  background: linear-gradient(180deg, #0e0e18 0%, #3a3a55 100%);
+}
+
+/* Scrollbar - Y2K style */
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-track {
+  background: #12121c;
+  border-left: 1px solid #2a2a45;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3a3a55, #252540);
+  border: 2px solid;
+  border-color: #4a4a65 #0e0e18 #0e0e18 #4a4a65;
+}
+
+/* Safe area for notch/home bar */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Hide scrollbar for clean mobile feel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Scanline overlay for extra Y2K flair */
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+}
+
+/* Ticker / marquee text */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Progress bar fill animation */
+@keyframes progress-shine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.progress-shine {
+  background: linear-gradient(90deg, #39ff14 0%, #7fff5e 50%, #39ff14 100%);
+  background-size: 200% 100%;
+  animation: progress-shine 2s linear infinite;
 }

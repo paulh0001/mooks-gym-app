@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mook's Gym App
 
-## Getting Started
+Adaptive workout companion — a mobile-first Progressive Web App built with Next.js, TypeScript, and Tailwind CSS.
 
-First, run the development server:
+## Features
+
+- **Onboarding questionnaire** — goal, equipment, frequency, experience level
+- **Auto-generated training plans** — 4-week blocks with balanced push/pull/legs/core
+- **Guided workout sessions** — exercise-by-exercise with rest timers
+- **Post-workout feedback** — difficulty rating that adapts future workouts
+- **Stretching routine** — guided cool-down with per-stretch timers
+- **Exercise library** — 50 seeded exercises + custom exercise creation
+- **Workout history** — track completed sessions and difficulty trends
+- **Fully offline** — all data stored locally in IndexedDB
+
+## Run Locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push the repo to GitHub
+2. Go to [vercel.com/new](https://vercel.com/new) and import the repo
+3. Click **Deploy** — no configuration needed
 
-## Learn More
+## Install on iPhone
 
-To learn more about Next.js, take a look at the following resources:
+1. Open the deployed URL in **Safari**
+2. Tap the **Share** button (square with arrow)
+3. Tap **Add to Home Screen**
+4. Tap **Add**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The app will launch in full-screen mode like a native app.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tech Stack
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS v4
+- IndexedDB for persistence (localStorage fallback)
+- PWA with manifest.json and iOS meta tags
