@@ -138,6 +138,35 @@ export interface Stretch {
   targetMuscles: MuscleGroup[];
 }
 
+// ── Pet System ──
+
+export type HungerStage = 'happy' | 'content' | 'hungry' | 'sad' | 'sick' | 'dead';
+
+export type PetAnimationState =
+  | 'idle'
+  | 'walking'
+  | 'sleeping'
+  | 'eating'
+  | 'happy'
+  | 'sad'
+  | 'sick'
+  | 'dancing'
+  | 'playing_banjo'
+  | 'death';
+
+export type ShellColor = 'frosted_purple' | 'teal' | 'pink' | 'green' | 'orange';
+
+export interface PetData {
+  name: string;
+  birthDate: string; // ISO date
+  lastFedDate: string; // ISO date
+  hungerStage: HungerStage;
+  isAlive: boolean;
+  sugarCubes: number;
+  totalFed: number;
+  generation: number;
+}
+
 // ── App State ──
 
 export interface AppData {
@@ -147,4 +176,6 @@ export interface AppData {
   sessions: WorkoutSession[];
   difficultyModifiers: DifficultyModifiers;
   stretches: Stretch[];
+  pet?: PetData;
+  shellColor: ShellColor;
 }

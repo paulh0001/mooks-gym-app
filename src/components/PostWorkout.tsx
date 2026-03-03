@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { DifficultyFeedback, WorkoutSession, Stretch } from '@/lib/types';
 import { useApp } from '@/lib/context';
 import { updateModifiers } from '@/lib/adaptation';
+import { SugarCubeIcon } from './SugarCube';
 
 const feedbackOptions: { value: DifficultyFeedback; label: string; emoji: string }[] = [
   { value: 'much_easier', label: 'Much Easier', emoji: '😴' },
@@ -90,7 +91,7 @@ interface Props {
 
 export default function PostWorkout({ session, onDone }: Props) {
   const { data, update } = useApp();
-  const [phase, setPhase] = useState<'feedback' | 'stretching' | 'done'>('feedback');
+  const [phase, setPhase] = useState<'feedback' | 'reward' | 'stretching' | 'done'>('feedback');
   const [selected, setSelected] = useState<DifficultyFeedback | null>(null);
   const [stretchIdx, setStretchIdx] = useState(0);
 
@@ -115,7 +116,16 @@ export default function PostWorkout({ session, onDone }: Props) {
       }));
     }
 
-    setPhase('stretching');
+    // Award a sugar cube
+    update((prev) => {
+      if (!prev.pet) return prev;
+      return {
+        ...prev,
+        pet: { ...prev.pet, sugarCubes: prev.pet.sugarCubes + 1 },
+      };
+    });
+
+    setPhase('reward');
   }, [selected, session, data.currentPlan, update]);
 
   const handleStretchDone = useCallback(() => {
@@ -193,6 +203,36 @@ export default function PostWorkout({ session, onDone }: Props) {
     );
   }
 
+  // Reward phase
+  if (phase === 'reward') {
+    return (
+      <div
+        className="min-h-[100dvh] flex flex-col items-center justify-center bg-bg px-6 text-center pt-safe"
+        style={{ fontFamily: "'Share Tech Mono', monospace" }}
+      >
+        <div className="bevel rounded-sm bg-bg-surface p-8 max-w-xs w-full">
+          <div className="lcd rounded-sm p-6">
+            <div className="sugar-drop-in mb-4 flex justify-center">
+              <SugarCubeIcon scale={3} />
+            </div>
+            <h1 className="text-xl font-bold mb-2 text-primary glow-green">
+              Sugar Cube Earned!
+            </h1>
+            <p className="text-text-secondary text-sm">
+              Feed it to your fly to keep it happy.
+            </p>
+          </div>
+          <button
+            onClick={() => setPhase('stretching')}
+            className="w-full mt-6 py-4 rounded-sm bevel-btn bg-bg-raised text-primary font-semibold glow-green active:bg-bg-surface transition-all"
+          >
+            Continue to Stretching
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Stretching phase
   if (phase === 'stretching') {
     return (
@@ -252,14 +292,14 @@ export default function PostWorkout({ session, onDone }: Props) {
           <div className="text-6xl mb-4">✨</div>
           <h1 className="text-2xl font-bold mb-2 text-primary glow-green">All Done!</h1>
           <p className="text-text-secondary mb-8 text-sm">
-            Great session. Recovery starts now.
+            Great session. Go feed your fly!
           </p>
         </div>
         <button
           onClick={onDone}
           className="w-full mt-6 py-4 rounded-sm bevel-btn bg-bg-raised text-primary font-semibold glow-green active:bg-bg-surface transition-all"
         >
-          Back to Home
+          Go Feed Your Fly!
         </button>
       </div>
     </div>

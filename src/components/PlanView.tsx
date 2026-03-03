@@ -20,25 +20,19 @@ export default function PlanView({ onCreatePlan }: Props) {
   if (!plan) {
     return (
       <div
-        className="flex flex-col items-center justify-center h-full px-6 text-center bg-bg"
-        style={{ fontFamily: "'Share Tech Mono', monospace" }}
+        className="flex flex-col items-center justify-center px-6 text-center"
+        style={{ fontFamily: "'Share Tech Mono', monospace", minHeight: 340 }}
       >
-        <div className="text-5xl mb-4">📋</div>
-        <h2
-          className="text-xl font-bold mb-2 text-primary uppercase tracking-widest"
-          style={{ fontFamily: "'Share Tech Mono', monospace" }}
-        >
+        <div className="text-4xl mb-3">📋</div>
+        <h2 className="text-lg font-bold mb-2 text-primary uppercase tracking-widest">
           No Plan Yet
         </h2>
-        <p
-          className="text-text-secondary text-sm mb-6 uppercase tracking-widest"
-          style={{ fontFamily: "'Share Tech Mono', monospace" }}
-        >
+        <p className="text-text-secondary text-xs mb-4 uppercase tracking-widest">
           Answer a few questions and we&apos;ll build a personalized workout plan.
         </p>
         <button
           onClick={onCreatePlan}
-          className="bevel-btn px-8 py-4 rounded-sm bg-bg-raised text-primary glow-green font-semibold active:opacity-80 uppercase tracking-widest"
+          className="bevel-btn px-6 py-3 rounded-sm bg-bg-raised text-primary glow-green font-semibold active:opacity-80 uppercase tracking-widest text-sm"
           style={{ fontFamily: "'Share Tech Mono', monospace" }}
         >
           Create Plan
@@ -76,29 +70,22 @@ export default function PlanView({ onCreatePlan }: Props) {
   const week = plan.weeks[viewWeek];
 
   return (
-    <div className="px-5 pt-safe pb-24 bg-bg min-h-screen">
+    <div className="px-3 py-3 overflow-y-auto" style={{ fontFamily: "'Share Tech Mono', monospace", maxHeight: 340 }}>
       {/* Header chrome bar */}
-      <div
-        className="chrome-bar pt-12 pb-4 flex items-center justify-between px-3 rounded-sm"
-        style={{ fontFamily: "'Share Tech Mono', monospace" }}
-      >
-        <h1
-          className="text-2xl font-bold text-primary uppercase tracking-widest glow-green"
-          style={{ fontFamily: "'Share Tech Mono', monospace" }}
-        >
+      <div className="chrome-bar flex items-center justify-between px-3 py-1.5 rounded-sm mb-3">
+        <h1 className="text-sm font-bold text-primary uppercase tracking-widest glow-green">
           Your Plan
         </h1>
         <button
           onClick={onCreatePlan}
-          className="text-sm text-primary font-medium uppercase tracking-widest hover:glow-green"
-          style={{ fontFamily: "'Share Tech Mono', monospace" }}
+          className="text-xs text-primary font-medium uppercase tracking-widest hover:glow-green"
         >
-          New Plan
+          New
         </button>
       </div>
 
       {/* Week selector */}
-      <div className="flex gap-2 mb-6 overflow-x-auto no-scrollbar mt-4">
+      <div className="flex gap-2 mb-3 overflow-x-auto no-scrollbar">
         {plan.weeks.map((_, i) => (
           <button
             key={i}

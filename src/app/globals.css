@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Tahoma&display=swap');
 
 @theme inline {
   --color-primary: #39ff14;
@@ -160,3 +159,143 @@ body {
   background-size: 200% 100%;
   animation: progress-shine 2s linear infinite;
 }
+
+/* ═══════════════════════════════════════ */
+/* TAMAGOTCHI SHELL                        */
+/* ═══════════════════════════════════════ */
+
+/* Shell color palettes */
+.tama-wrapper {
+  --shell-main: #8b6fba;
+  --shell-light: #b89ee0;
+  --shell-dark: #5a4580;
+  --shell-glow: rgba(139, 111, 186, 0.35);
+}
+
+.tama-wrapper[data-color="frosted_purple"] {
+  --shell-main: #8b6fba;
+  --shell-light: #b89ee0;
+  --shell-dark: #5a4580;
+  --shell-glow: rgba(139, 111, 186, 0.35);
+}
+
+.tama-wrapper[data-color="teal"] {
+  --shell-main: #4db8a8;
+  --shell-light: #7de0d0;
+  --shell-dark: #2d8878;
+  --shell-glow: rgba(77, 184, 168, 0.35);
+}
+
+.tama-wrapper[data-color="pink"] {
+  --shell-main: #d06b9e;
+  --shell-light: #f09ece;
+  --shell-dark: #a04570;
+  --shell-glow: rgba(208, 107, 158, 0.35);
+}
+
+.tama-wrapper[data-color="green"] {
+  --shell-main: #6bba6f;
+  --shell-light: #9ee0a0;
+  --shell-dark: #458048;
+  --shell-glow: rgba(107, 186, 111, 0.35);
+}
+
+.tama-wrapper[data-color="orange"] {
+  --shell-main: #d09050;
+  --shell-light: #f0b878;
+  --shell-dark: #a06830;
+  --shell-glow: rgba(208, 144, 80, 0.35);
+}
+
+.tama-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 8px;
+  background: var(--color-bg);
+}
+
+.tama-shell {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(
+    145deg,
+    var(--shell-light) 0%,
+    var(--shell-main) 30%,
+    var(--shell-dark) 70%,
+    var(--shell-main) 100%
+  );
+  border-radius: 16px;
+  padding: 16px 12px 12px;
+  box-shadow:
+    0 0 30px var(--shell-glow),
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.25),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.tama-highlight {
+  position: absolute;
+  top: 8%;
+  left: 15%;
+  width: 40%;
+  height: 25%;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tama-bezel {
+  border: 3px solid;
+  border-color: #0e0e18 #3a3a55 #3a3a55 #0e0e18;
+  border-radius: 8px;
+  padding: 3px;
+  background: #1a1a2e;
+}
+
+.tama-lcd {
+  position: relative;
+  background: #0a1a0a;
+  border-radius: 5px;
+  min-height: 360px;
+  overflow: hidden;
+}
+
+.tama-nav-area {
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Sugar cube drag glow */
+@keyframes sugar-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.4); }
+  50% { box-shadow: 0 0 16px rgba(255, 255, 255, 0.7); }
+}
+
+.sugar-cube-glow {
+  animation: sugar-glow 1.5s ease-in-out infinite;
+}
+
+/* Sugar cube drop-in animation */
+@keyframes sugar-drop {
+  0% { transform: translateY(-40px) scale(0.5); opacity: 0; }
+  60% { transform: translateY(5px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.sugar-drop-in {
+  animation: sugar-drop 0.6s ease-out;
+}
+
+/* Hunger bar colors */
+.hunger-happy { background: #39ff14; }
+.hunger-content { background: #7fff5e; }
+.hunger-hungry { background: #ffaa00; }
+.hunger-sad { background: #ff8800; }
+.hunger-sick { background: #ff3131; }
+.hunger-dead { background: #555555; }

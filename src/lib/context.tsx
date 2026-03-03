@@ -20,6 +20,7 @@ const defaultData: AppData = {
   sessions: [],
   difficultyModifiers: { global: 0, byCategory: { upper: 0, lower: 0, full_body: 0 } },
   stretches: seedStretches(),
+  shellColor: 'frosted_purple',
 };
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
@@ -48,6 +49,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       sessions: [],
       difficultyModifiers: { global: 0, byCategory: { upper: 0, lower: 0, full_body: 0 } },
       stretches: seedStretches(),
+      shellColor: 'frosted_purple',
     };
     setData(fresh);
     await saveAppData(fresh);

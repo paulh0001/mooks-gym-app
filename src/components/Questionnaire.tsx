@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Equipment, ExperienceLevel, Goal, QuestionnaireAnswers } from '@/lib/types';
+import FruitFly from './FruitFly';
 
 const goals: { value: Goal; label: string; desc: string }[] = [
   { value: 'strength', label: 'STRENGTH', desc: 'Lift heavier, get stronger' },
@@ -22,7 +23,7 @@ const equipmentOptions: { value: Equipment; label: string }[] = [
 ];
 
 interface Props {
-  onComplete: (answers: QuestionnaireAnswers) => void;
+  onComplete: (answers: QuestionnaireAnswers, petName: string) => void;
 }
 
 export default function Questionnaire({ onComplete }: Props) {
@@ -32,8 +33,9 @@ export default function Questionnaire({ onComplete }: Props) {
   const [frequency, setFrequency] = useState(3);
   const [experience, setExperience] = useState<ExperienceLevel>('beginner');
   const [sessionMinutes, setSessionMinutes] = useState(30);
+  const [petName, setPetName] = useState('');
 
-  const totalSteps = 4;
+  const totalSteps = 5;
 
   function toggleEquipment(eq: Equipment) {
     if (eq === 'bodyweight') return;
@@ -45,13 +47,16 @@ export default function Questionnaire({ onComplete }: Props) {
   function next() {
     if (step < totalSteps - 1) setStep(step + 1);
     else {
-      onComplete({
-        goal: goal!,
-        equipment,
-        frequency,
-        experienceLevel: experience,
-        sessionMinutes,
-      });
+      onComplete(
+        {
+          goal: goal!,
+          equipment,
+          frequency,
+          experienceLevel: experience,
+          sessionMinutes,
+        },
+        petName.trim() || 'Buzzy',
+      );
     }
   }
 
@@ -62,6 +67,7 @@ export default function Questionnaire({ onComplete }: Props) {
   const canNext =
     step === 0 ? goal !== null :
     step === 1 ? equipment.length > 0 :
+    step === 4 ? petName.trim().length > 0 :
     true;
 
   return (
@@ -237,6 +243,47 @@ export default function Questionnaire({ onComplete }: Props) {
             </div>
           </div>
         )}
+
+        {step === 4 && (
+          <div>
+            <h2 className="text-xs font-bold tracking-widest text-text-secondary mb-1 uppercase" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+              NAME YOUR FLY
+            </h2>
+            <div className="groove mb-4" />
+
+            <div className="mb-6">
+              <label className="text-[10px] font-bold tracking-widest text-text-secondary mb-2 block" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+                YOUR PET FRUIT FLY
+              </label>
+              <input
+                type="text"
+                value={petName}
+                onChange={(e) => setPetName(e.target.value.slice(0, 12))}
+                placeholder="Enter a name..."
+                maxLength={12}
+                className="w-full lcd px-4 py-3 rounded-sm text-lg text-primary bg-transparent border-none outline-none placeholder:text-text-secondary/40"
+                style={{ fontFamily: "'Share Tech Mono', monospace" }}
+                autoFocus
+              />
+              <div className="text-right text-[10px] text-text-secondary mt-1" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+                {petName.length}/12
+              </div>
+            </div>
+
+            {/* Fly preview */}
+            <div className="flex justify-center">
+              <div
+                className="relative bevel-inset bg-bg-surface rounded-sm overflow-hidden"
+                style={{ width: 160, height: 140 }}
+              >
+                <FruitFly animationState="idle" containerWidth={160} containerHeight={140} />
+              </div>
+            </div>
+            <div className="text-center mt-3 text-xs text-text-secondary" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+              This little buddy depends on you!
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Bottom controls - media player style */}
@@ -260,7 +307,7 @@ export default function Questionnaire({ onComplete }: Props) {
           }`}
           style={{ fontFamily: "'Share Tech Mono', monospace" }}
         >
-          {step === totalSteps - 1 ? '▶ GENERATE' : 'NEXT ▶▶'}
+          {step === totalSteps - 1 ? '▶ HATCH & START' : 'NEXT ▶▶'}
         </button>
       </div>
     </div>

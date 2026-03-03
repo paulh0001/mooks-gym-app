@@ -2,15 +2,15 @@
 
 import React from 'react';
 
-export type Tab = 'today' | 'plan' | 'library' | 'settings';
+export type Tab = 'pet' | 'plan' | 'library' | 'settings';
 
 const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
   {
-    id: 'today',
-    label: 'PLAY',
+    id: 'pet',
+    label: 'FLY',
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 3l14 9-14 9V3z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c-1.5-2-4-3-4-6a4 4 0 018 0c0 3-2.5 4-4 6zm0 0v4m-3 3h6m-5-1.5c-.5 1-1.5 1.5-1.5 1.5m4.5-1.5c.5 1 1.5 1.5 1.5 1.5" />
       </svg>
     ),
   },
@@ -51,7 +51,7 @@ export default function BottomNav({
   onChange: (t: Tab) => void;
 }) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 chrome-bar pb-safe">
+    <nav className="relative chrome-bar">
       <div className="flex justify-around items-center h-14">
         {tabs.map((t) => (
           <button

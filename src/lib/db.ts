@@ -19,6 +19,7 @@ function defaultAppData(): AppData {
     sessions: [],
     difficultyModifiers: defaultModifiers(),
     stretches: seedStretches(),
+    shellColor: 'frosted_purple',
   };
 }
 
@@ -90,6 +91,7 @@ export async function loadAppData(): Promise<AppData> {
       data.exercises = [...seeded, ...custom];
       if (!data.stretches?.length) data.stretches = seedStretches();
       if (!data.difficultyModifiers) data.difficultyModifiers = defaultModifiers();
+      if (!data.shellColor) data.shellColor = 'frosted_purple';
       return data;
     }
   } catch {

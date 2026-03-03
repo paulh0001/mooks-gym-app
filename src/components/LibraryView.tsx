@@ -218,12 +218,12 @@ export default function LibraryView() {
 
   // List view
   return (
-    <div className="px-5 pt-safe pb-24 bg-bg min-h-[100dvh]" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
-      <div className="pt-12 pb-4 flex items-center justify-between chrome-bar rounded-sm px-3 py-2">
-        <h1 className="text-2xl text-text-bright uppercase tracking-widest glow-green">Exercise Library</h1>
+    <div className="px-3 py-3 overflow-y-auto" style={{ fontFamily: "'Share Tech Mono', monospace", maxHeight: 340 }}>
+      <div className="flex items-center justify-between chrome-bar rounded-sm px-3 py-1.5 mb-3">
+        <h1 className="text-sm text-text-bright uppercase tracking-widest glow-green">Library</h1>
         <button
           onClick={() => setShowCreate(true)}
-          className="w-9 h-9 rounded-sm bevel-btn flex items-center justify-center text-primary text-lg glow-green"
+          className="w-7 h-7 rounded-sm bevel-btn flex items-center justify-center text-primary text-sm glow-green"
         >
           +
         </button>
@@ -231,15 +231,14 @@ export default function LibraryView() {
 
       <input
         type="text"
-        placeholder="Search exercises..."
+        placeholder="Search..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full p-3 rounded-sm border border-border bevel-inset bg-bg-surface text-sm text-text-bright mb-4 mt-4"
-        style={{ fontFamily: "'Share Tech Mono', monospace" }}
+        className="w-full p-2 rounded-sm border border-border bevel-inset bg-bg-surface text-xs text-text-bright mb-3"
       />
 
       {/* Muscle filter chips */}
-      <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
+      <div className="flex gap-1 overflow-x-auto no-scrollbar mb-3">
         <button
           onClick={() => setFilter(null)}
           className={`px-3 py-1.5 rounded-sm text-xs uppercase tracking-widest whitespace-nowrap bevel-btn ${
