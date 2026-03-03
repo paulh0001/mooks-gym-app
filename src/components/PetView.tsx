@@ -138,8 +138,14 @@ export default function PetView({ onStartWorkout, onCreatePlan }: Props) {
       >
         <div className="text-4xl mb-4">🥚</div>
         <div className="text-primary glow-green text-lg mb-2">NO PET YET</div>
-        <div className="text-text-secondary text-xs mb-5">
+        <div className="text-text-secondary text-xs mb-3">
           Complete the setup questionnaire to hatch your fly!
+        </div>
+        <div
+          className="text-text-secondary text-[11px] mb-5 px-4 py-3 bevel bg-bg-card rounded-sm border border-border leading-relaxed"
+          style={{ fontFamily: "'Share Tech Mono', monospace" }}
+        >
+          Hey Mikaela, I hope you take good care of your fruit fly :) Love, Paul
         </div>
         <button
           onClick={onCreatePlan}
