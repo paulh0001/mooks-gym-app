@@ -15,10 +15,12 @@ import WorkoutSessionRunner from '@/components/WorkoutSession';
 import PostWorkout from '@/components/PostWorkout';
 import InstallBanner from '@/components/InstallBanner';
 import TamagotchiShell from '@/components/TamagotchiShell';
+import HatchingScreen from '@/components/HatchingScreen';
 
 type AppScreen =
   | { type: 'tabs' }
   | { type: 'questionnaire' }
+  | { type: 'hatching'; petName: string }
   | { type: 'workout'; workout: Workout }
   | { type: 'postWorkout'; session: WorkoutSession };
 
@@ -47,11 +49,15 @@ function AppShell() {
         currentPlan: plan,
         pet,
       }));
-      setScreen({ type: 'tabs' });
-      setTab('pet');
+      setScreen({ type: 'hatching', petName });
     },
     [data.exercises, update],
   );
+
+  const handleHatchingDone = useCallback(() => {
+    setScreen({ type: 'tabs' });
+    setTab('pet');
+  }, []);
 
   const handleStartWorkout = useCallback((workout: Workout) => {
     setScreen({ type: 'workout', workout });
@@ -125,6 +131,10 @@ function AppShell() {
   // Full-screen flows render OUTSIDE the shell
   if (screen.type === 'questionnaire') {
     return <Questionnaire onComplete={handleQuestionnaireComplete} />;
+  }
+
+  if (screen.type === 'hatching') {
+    return <HatchingScreen petName={screen.petName} onDone={handleHatchingDone} />;
   }
 
   if (screen.type === 'workout') {

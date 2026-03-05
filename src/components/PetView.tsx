@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '@/lib/context';
 import { PetAnimationState, Workout, Plan } from '@/lib/types';
 import { checkPetStatus, feedPet, pickNextState, createPet, tryInteraction, InteractionType } from '@/lib/pet-logic';
+import { playBanjoLick } from '@/lib/audio';
 import FruitFly from './FruitFly';
 import SugarCube, { SugarCubeIcon } from './SugarCube';
 
@@ -123,6 +124,9 @@ export default function PetView({ onStartWorkout, onCreatePlan }: Props) {
     setInteracting(true);
     setAnimState(result.animation);
     setFlyMessage(result.message);
+    if (type === 'banjo' && result.accepted) {
+      playBanjoLick();
+    }
     setTimeout(() => {
       setInteracting(false);
       setFlyMessage(null);

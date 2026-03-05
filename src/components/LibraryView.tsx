@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useApp } from '@/lib/context';
 import { Exercise, Equipment, MuscleGroup, MovementPattern } from '@/lib/types';
+import { YouTubeIcon, youtubeSearchUrl } from './ExerciseIcons';
 
 const muscleLabels: Record<MuscleGroup, string> = {
   chest: 'Chest', back: 'Back', shoulders: 'Shoulders', biceps: 'Biceps',
@@ -68,7 +69,7 @@ export default function LibraryView() {
 
         <h1 className="text-2xl text-text-bright mt-4 mb-4 glow-green uppercase tracking-widest" style={{ fontFamily: "'Share Tech Mono', monospace" }}>{ex.name}</h1>
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-3">
           <span className="bevel-btn px-3 py-1 rounded-sm text-primary text-xs uppercase tracking-widest glow-green" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
             {muscleLabels[ex.primaryMuscle]}
           </span>
@@ -78,6 +79,18 @@ export default function LibraryView() {
             </span>
           ))}
         </div>
+
+        <a
+          href={youtubeSearchUrl(ex.name)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 bevel-btn px-4 py-2 rounded-sm mb-4"
+        >
+          <YouTubeIcon size={16} />
+          <span className="text-xs text-text-bright uppercase tracking-widest" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+            Watch Form
+          </span>
+        </a>
 
         <div className="bevel bg-bg-card rounded-sm p-4 border border-border mb-4">
           <h3 className="text-sm text-text-secondary mb-2 uppercase tracking-widest" style={{ fontFamily: "'Share Tech Mono', monospace" }}>INSTRUCTIONS</h3>

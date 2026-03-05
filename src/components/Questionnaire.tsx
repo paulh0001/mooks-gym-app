@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Equipment, ExperienceLevel, Goal, QuestionnaireAnswers } from '@/lib/types';
+import React, { useState, useMemo } from 'react';
+import { Equipment, Exercise, ExperienceLevel, Goal, MovementPattern, QuestionnaireAnswers } from '@/lib/types';
+import { useApp } from '@/lib/context';
+import { YouTubeIcon, youtubeSearchUrl } from './ExerciseIcons';
 import FruitFly from './FruitFly';
 
 const goals: { value: Goal; label: string; desc: string }[] = [
@@ -20,6 +22,8 @@ const equipmentOptions: { value: Equipment; label: string }[] = [
   { value: 'pull_up_bar', label: 'Pull-Up Bar' },
   { value: 'bench', label: 'Bench' },
   { value: 'cable_machine', label: 'Cable Machine' },
+  { value: 'machine', label: 'Gym Machines' },
+  { value: 'trx', label: 'TRX / Suspension' },
 ];
 
 interface Props {
@@ -27,15 +31,57 @@ interface Props {
 }
 
 export default function Questionnaire({ onComplete }: Props) {
+  const { data } = useApp();
   const [step, setStep] = useState(0);
   const [goal, setGoal] = useState<Goal | null>(null);
   const [equipment, setEquipment] = useState<Equipment[]>(['bodyweight']);
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
+  const [favSearch, setFavSearch] = useState('');
   const [frequency, setFrequency] = useState(3);
   const [experience, setExperience] = useState<ExperienceLevel>('beginner');
   const [sessionMinutes, setSessionMinutes] = useState(30);
   const [petName, setPetName] = useState('');
 
-  const totalSteps = 5;
+  const totalSteps = 6;
+
+  // Exercises filtered by selected equipment for the favorites picker
+  const availableExercises = useMemo(() => {
+    const eqSet = new Set(equipment);
+    eqSet.add('bodyweight');
+    return data.exercises.filter((ex) => ex.equipment.every((e) => eqSet.has(e)));
+  }, [data.exercises, equipment]);
+
+  // Group available exercises by movement pattern, filtered by search
+  const groupedExercises = useMemo(() => {
+    const query = favSearch.toLowerCase();
+    const filtered = query
+      ? availableExercises.filter((ex) => ex.name.toLowerCase().includes(query))
+      : availableExercises;
+
+    const groups: Record<string, Exercise[]> = {};
+    const patternLabels: Record<MovementPattern, string> = {
+      push: 'PUSH',
+      pull: 'PULL',
+      legs: 'LEGS',
+      core: 'CORE',
+      compound: 'COMPOUND',
+    };
+    for (const ex of filtered) {
+      const label = patternLabels[ex.movementPattern] || ex.movementPattern.toUpperCase();
+      if (!groups[label]) groups[label] = [];
+      groups[label].push(ex);
+    }
+    return groups;
+  }, [availableExercises, favSearch]);
+
+  function toggleFavorite(id: string) {
+    setFavoriteIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   function toggleEquipment(eq: Equipment) {
     if (eq === 'bodyweight') return;
@@ -51,6 +97,7 @@ export default function Questionnaire({ onComplete }: Props) {
         {
           goal: goal!,
           equipment,
+          favoriteExerciseIds: favoriteIds.size > 0 ? Array.from(favoriteIds) : undefined,
           frequency,
           experienceLevel: experience,
           sessionMinutes,
@@ -67,7 +114,7 @@ export default function Questionnaire({ onComplete }: Props) {
   const canNext =
     step === 0 ? goal !== null :
     step === 1 ? equipment.length > 0 :
-    step === 4 ? petName.trim().length > 0 :
+    step === 5 ? petName.trim().length > 0 :
     true;
 
   return (
@@ -160,6 +207,89 @@ export default function Questionnaire({ onComplete }: Props) {
         {step === 2 && (
           <div>
             <h2 className="text-xs font-bold tracking-widest text-text-secondary mb-1 uppercase" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+              PICK FAVORITES
+            </h2>
+            <div className="groove mb-2" />
+            <p className="text-[10px] text-text-secondary mb-3" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+              OPTIONAL -- tap exercises you like. They&apos;ll be prioritized in your plan.
+            </p>
+
+            {/* Search */}
+            <input
+              type="text"
+              value={favSearch}
+              onChange={(e) => setFavSearch(e.target.value)}
+              placeholder="Search exercises..."
+              className="w-full lcd px-3 py-2 rounded-sm text-xs text-primary bg-transparent border-none outline-none placeholder:text-text-secondary/40 mb-3"
+              style={{ fontFamily: "'Share Tech Mono', monospace" }}
+            />
+
+            {/* Selected count */}
+            {favoriteIds.size > 0 && (
+              <div className="lcd px-3 py-1.5 rounded-sm text-center text-[10px] tracking-wide mb-3">
+                {favoriteIds.size} SELECTED
+              </div>
+            )}
+
+            {/* Grouped exercise list */}
+            <div className="space-y-4 max-h-[45vh] overflow-y-auto -mx-1 px-1">
+              {Object.entries(groupedExercises).map(([group, exercises]) => (
+                <div key={group}>
+                  <div className="text-[10px] font-bold tracking-widest text-text-secondary mb-1.5" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+                    {group}
+                  </div>
+                  <div className="space-y-1">
+                    {exercises.map((ex) => (
+                      <div
+                        key={ex.id}
+                        className={`flex items-center gap-2.5 px-3 py-2 transition-all ${
+                          favoriteIds.has(ex.id)
+                            ? 'bevel bg-bg-raised glow-green-box'
+                            : 'bevel-btn'
+                        }`}
+                      >
+                        {/* Exercise info -- tap to toggle */}
+                        <button
+                          onClick={() => toggleFavorite(ex.id)}
+                          className="flex-1 text-left min-w-0"
+                        >
+                          <div className={`text-xs font-bold tracking-wide truncate ${favoriteIds.has(ex.id) ? 'text-primary' : 'text-text-bright'}`}
+                            style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+                            {ex.name}
+                          </div>
+                          <div className="text-[9px] text-text-secondary mt-0.5">
+                            {ex.primaryMuscle.replace('_', ' ').toUpperCase()} -- {ex.equipment.join(', ')}
+                          </div>
+                        </button>
+
+                        {/* YouTube link */}
+                        <a
+                          href={youtubeSearchUrl(ex.name)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="shrink-0 flex items-center justify-center w-7 h-7 rounded-sm bevel-btn"
+                          title="Watch on YouTube"
+                        >
+                          <YouTubeIcon />
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {Object.keys(groupedExercises).length === 0 && (
+                <div className="text-center text-xs text-text-secondary py-6" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
+                  No exercises match your search
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div>
+            <h2 className="text-xs font-bold tracking-widest text-text-secondary mb-1 uppercase" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
               FREQUENCY
             </h2>
             <div className="groove mb-6" />
@@ -190,7 +320,7 @@ export default function Questionnaire({ onComplete }: Props) {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 4 && (
           <div>
             <h2 className="text-xs font-bold tracking-widest text-text-secondary mb-1 uppercase" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
               PROFILE
@@ -244,7 +374,7 @@ export default function Questionnaire({ onComplete }: Props) {
           </div>
         )}
 
-        {step === 4 && (
+        {step === 5 && (
           <div>
             <h2 className="text-xs font-bold tracking-widest text-text-secondary mb-1 uppercase" style={{ fontFamily: "'Share Tech Mono', monospace" }}>
               NAME YOUR FLY

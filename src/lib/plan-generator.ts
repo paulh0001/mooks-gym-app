@@ -19,6 +19,7 @@ interface BuildCtx {
   answers: QuestionnaireAnswers;
   exercises: Exercise[];
   available: Exercise[]; // filtered by equipment
+  favoriteIds: Set<string>;
 }
 
 function filterByEquipment(exercises: Exercise[], equipment: Equipment[]): Exercise[] {
@@ -33,10 +34,17 @@ function pickExercises(
   pattern: MovementPattern,
   count: number,
   maxTier: number,
+  favoriteIds: Set<string>,
 ): Exercise[] {
   const filtered = pool
     .filter((e) => e.movementPattern === pattern && e.difficultyTier <= maxTier)
-    .sort((a, b) => a.difficultyTier - b.difficultyTier);
+    // Sort favorites first, then by difficulty tier
+    .sort((a, b) => {
+      const aFav = favoriteIds.has(a.id) ? 0 : 1;
+      const bFav = favoriteIds.has(b.id) ? 0 : 1;
+      if (aFav !== bFav) return aFav - bFav;
+      return a.difficultyTier - b.difficultyTier;
+    });
 
   // Deduplicate by primaryMuscle to get variety
   const seen = new Set<string>();
@@ -117,7 +125,7 @@ function buildWorkout(
   const exercises: PlannedExercise[] = [];
 
   for (const { pattern, count } of patterns) {
-    const picks = pickExercises(ctx.available, pattern, count, maxTier);
+    const picks = pickExercises(ctx.available, pattern, count, maxTier, ctx.favoriteIds);
     for (const ex of picks) {
       exercises.push({
         exerciseId: ex.id,
@@ -216,7 +224,8 @@ export function generatePlan(
   exercises: Exercise[],
 ): Plan {
   const available = filterByEquipment(exercises, answers.equipment);
-  const ctx: BuildCtx = { answers, exercises, available };
+  const favoriteIds = new Set(answers.favoriteExerciseIds ?? []);
+  const ctx: BuildCtx = { answers, exercises, available, favoriteIds };
 
   const workouts = generateWorkouts(ctx);
   const weekSchedule = distributeWorkouts(workouts, answers.frequency);

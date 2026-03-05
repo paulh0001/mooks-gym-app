@@ -9,6 +9,8 @@ export type Equipment =
   | 'pull_up_bar'
   | 'bench'
   | 'cable_machine'
+  | 'machine'
+  | 'trx'
   | 'other';
 
 export type MuscleGroup =
@@ -85,6 +87,7 @@ export interface Plan {
 export interface QuestionnaireAnswers {
   goal: Goal;
   equipment: Equipment[];
+  favoriteExerciseIds?: string[];
   frequency: number; // 2-6
   experienceLevel: ExperienceLevel;
   sessionMinutes: number; // 20-60
